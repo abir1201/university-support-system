@@ -1,0 +1,53 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# ----------------------------------------------------------------------------
+
+if [ -z "$MAVEN_PROJECTBASEDIR" ] ; then
+  BASEDIR=`dirname $0`/..
+else
+  BASEDIR="$MAVEN_PROJECTBASEDIR"
+fi
+
+##########################################################################################
+# Extension to allow automatically downloading the maven-wrapper.jar from Maven-central
+# This allows using the maven wrapper in projects that prohibit checking in binary data.
+##########################################################################################
+if [ -r "$BASEDIR/.mvn/wrapper/maven-wrapper.jar" ] ; then
+    if [ "$MVNW_VERBOSE" = true ]; then
+      echo "Found .mvn/wrapper/maven-wrapper.jar"
+    fi
+else
+    if [ "$MVNW_VERBOSE" = true ]; then
+      echo "Couldn't find .mvn/wrapper/maven-wrapper.jar, downloading it ..."
+    fi
+    BASEDIR_MAVEN_HOME=$(cd "$BASEDIR/.mvn" || false && pwd)
+    if [ "$BASEDIR_MAVEN_HOME" != "" ] ; then
+        if [ ! -d "$BASEDIR_MAVEN_HOME/wrapper" ] ; then
+            mkdir -p "$BASEDIR_MAVEN_HOME/wrapper"
+        fi
+        if [ ! -f "$BASEDIR_MAVEN_HOME/wrapper/maven-wrapper.jar" ] ; then
+            curl -fsSL -o "$BASEDIR_MAVEN_HOME/wrapper/maven-wrapper.jar" \
+                "https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+        fi
+    fi
+fi
+
+MAVEN_WRAPPER_JAR=$(find "$BASEDIR_MAVEN_HOME/wrapper" -name "maven-wrapper.jar" 2>/dev/null | head -1)
+
+exec java -cp "$MAVEN_WRAPPER_JAR" org.apache.maven.wrapper.MavenWrapperMain "$@"

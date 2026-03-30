@@ -1,0 +1,24 @@
+# Environment files — NEVER commit
+.env
+*.env
+
+# Java / Maven
+backend/target/
+backend/.mvn/
+*.class
+*.jar
+
+# Python
+ai-service/venv/
+ai-service/__pycache__/
+ai-service/*.pyc
+ai-service/.pytest_cache/
+
+# Node / React
+frontend/node_modules/
+frontend/build/
+
+# IDE
+.idea/
+.vscode/
+*.iml

@@ -1,0 +1,50 @@
+services:
+  # Backend Service - Spring Boot
+  - type: web
+    name: university-system-backend
+    env: java
+    plan: free
+    buildCommand: "cd backend && ./mvnw clean package -DskipTests"
+    startCommand: "java -jar backend/target/university-system-1.0.jar"
+    healthCheckPath: /
+    envVars:
+      - key: GROQ_API_KEY
+        scope: build
+      - key: AI_SERVICE_URL
+        value: "https://university-system-ai.onrender.com"
+      - key: SERVER_PORT
+        value: "8080"
+
+  # AI Service - FastAPI Python
+  - type: web
+    name: university-system-ai
+    env: python
+    plan: free
+    buildCommand: "cd ai-service && pip install -r requirements.txt"
+    startCommand: "cd ai-service && uvicorn main:app --host 0.0.0.0 --port 8000"
+    pythonVersion: 3.11
+    envVars:
+      - key: GROQ_API_KEY
+        scope: build
+      - key: GROQ_MODEL
+        value: "llama-3.1-8b-instant"
+      - key: MAX_TOKENS
+        value: "1024"
+      - key: TEMPERATURE
+        value: "0.7"
+
+  # Frontend Service - React
+  - type: static
+    name: university-system-frontend
+    plan: free
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "frontend/build"
+    envVars:
+      - key: REACT_APP_API_URL
+        value: "https://university-system-backend.onrender.com"
+
+databases:
+  # Optional: PostgreSQL for persistent data
+  - name: university-db
+    plan: free
+    ipAllowList: []

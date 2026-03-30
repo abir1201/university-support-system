@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip show:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m pip show fastapi groq uvicorn)",
+      "Bash(python -m pip install fastapi uvicorn groq python-dotenv httpx)",
+      "Bash(winget install:*)",
+      "Bash(winget search:*)",
+      "Bash(export PATH=\"$PATH:/e/maven/apache-maven-3.9.14/bin\")",
+      "Bash(mvn clean:*)",
+      "Bash(grep -v \"^\\\\[ERROR\\\\] $\")"
+    ]
+  }
+}
