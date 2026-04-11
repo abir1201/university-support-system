@@ -19,7 +19,7 @@
 # ----------------------------------------------------------------------------
 
 if [ -z "$MAVEN_PROJECTBASEDIR" ] ; then
-  BASEDIR=`dirname $0`/..
+  BASEDIR=`dirname $0`
 else
   BASEDIR="$MAVEN_PROJECTBASEDIR"
 fi
@@ -28,6 +28,8 @@ fi
 # Extension to allow automatically downloading the maven-wrapper.jar from Maven-central
 # This allows using the maven wrapper in projects that prohibit checking in binary data.
 ##########################################################################################
+BASEDIR_MAVEN_HOME=$(cd "$BASEDIR/.mvn" 2>/dev/null && pwd)
+
 if [ -r "$BASEDIR/.mvn/wrapper/maven-wrapper.jar" ] ; then
     if [ "$MVNW_VERBOSE" = true ]; then
       echo "Found .mvn/wrapper/maven-wrapper.jar"
@@ -36,7 +38,6 @@ else
     if [ "$MVNW_VERBOSE" = true ]; then
       echo "Couldn't find .mvn/wrapper/maven-wrapper.jar, downloading it ..."
     fi
-    BASEDIR_MAVEN_HOME=$(cd "$BASEDIR/.mvn" || false && pwd)
     if [ "$BASEDIR_MAVEN_HOME" != "" ] ; then
         if [ ! -d "$BASEDIR_MAVEN_HOME/wrapper" ] ; then
             mkdir -p "$BASEDIR_MAVEN_HOME/wrapper"
@@ -50,4 +51,4 @@ fi
 
 MAVEN_WRAPPER_JAR=$(find "$BASEDIR_MAVEN_HOME/wrapper" -name "maven-wrapper.jar" 2>/dev/null | head -1)
 
-exec java -cp "$MAVEN_WRAPPER_JAR" org.apache.maven.wrapper.MavenWrapperMain "$@"
+exec java -cp "$MAVEN_WRAPPER_JAR" -Dmaven.multiModuleProjectDirectory="$BASEDIR" org.apache.maven.wrapper.MavenWrapperMain "$@"

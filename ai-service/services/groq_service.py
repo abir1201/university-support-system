@@ -12,6 +12,7 @@ import os
 import re
 from groq import Groq
 from dotenv import load_dotenv
+from services.diu_scraper import DIUScraper
 
 load_dotenv()
 
@@ -24,6 +25,7 @@ class GroqService:
         self._model = os.getenv("GROQ_MODEL", "llama3-70b-8192")
         self._max_tokens = int(os.getenv("MAX_TOKENS", "1024"))
         self._temperature = float(os.getenv("TEMPERATURE", "0.7"))
+        self._scraper = DIUScraper()
 
     def _clean_markdown(self, text: str) -> str:
         """Remove all markdown special characters and formatting."""
@@ -53,16 +55,29 @@ class GroqService:
 
     def answer_query(self, category: str, question: str) -> dict:
         """
-        Answers a student query in the context of university services.
+        Answers a student query using live data from Daffodil International
+        University (DIU) website as the primary knowledge source.
         Returns the answer text plus metadata.
         """
+        # Fetch relevant DIU website content as context
+        diu_context = self._scraper.get_relevant_content(question)
+
         system_prompt = (
-            "You are a helpful university student services assistant. "
-            "Answer questions clearly and concisely with structured lists. "
-            f"The query category is: {category}. "
-            "Format lists using: 1. 2. 3. for numbers, a. b. c. for letters, i. ii. iii. for roman numerals, and - for bullets. "
-            "Do NOT use asterisks (*) or hash symbols (#) for formatting. "
-            "If you don't know a specific university's policy, give general guidance."
+            "You are an official AI assistant for Daffodil International University (DIU), Bangladesh.\n"
+            "Your ONLY source of truth is the DIU website data provided below.\n"
+            "Rules you MUST follow:\n"
+            "1. Answer ONLY based on the DIU website data provided. Do NOT use your own training data or general knowledge.\n"
+            "2. If the answer is NOT found in the DIU data below, say: "
+            "\"I could not find this information on the DIU website. Please visit https://daffodilvarsity.edu.bd/ or contact DIU directly.\"\n"
+            "3. Do NOT make up or guess any information.\n"
+            "4. For fees/tuition: give the exact amount from the data.\n"
+            "5. For notices: list the notices found in the data.\n"
+            "6. Format lists using: 1. 2. 3. for numbers, and - for bullets.\n"
+            "7. Do NOT use asterisks (*) or hash symbols (#) for formatting.\n"
+            f"8. Query category: {category}.\n\n"
+            "=== DIU WEBSITE DATA (use ONLY this as your source) ===\n"
+            f"{diu_context}\n"
+            "=== END OF DIU WEBSITE DATA ==="
         )
         answer = self._chat(system_prompt, question)
         answer = self._clean_markdown(answer)
