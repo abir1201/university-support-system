@@ -10,8 +10,10 @@ backend/.mvn/
 
 # Python
 ai-service/venv/
-ai-service/__pycache__/
-ai-service/*.pyc
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
 ai-service/.pytest_cache/
 
 # Node / React
